@@ -1,0 +1,57 @@
+#!/usr/bin/env python
+# -*- encoding: utf-8; py-indent-offset: 4 -*-
+
+epc_1200_snmp_scan = lambda oid: oid(".1.3.6.1.2.1.1.2.0") in [
+            ".1.3.6.1.4.1.28507.11", #  EPC 1200 or EPC 4x Desktop 1200
+            ".1.3.6.1.4.1.28507.37", #  EPC 1200, newer firmware
+       ]
+
+epc_1200_info_leafs = {
+            "port": [
+                        2,  # PortName
+                        3,  # PortState
+                        5,  # PortStartupMode
+                    ],
+            "sensor_old": [
+                        1,        # epc4dsIrms (PowerChannel)
+                        '2.1.2',  # TempSensor
+                        '2.1.3',  # HygroSensor
+                      ],
+            "sensor_new": [
+                        '5.1.2.1.5',  # PowerChannel
+                        '6.1.1.2',    # TempSensor
+                        '6.1.1.3',    # HygroSensor
+                      ],
+}
+
+epc_1200_snmp_info = {
+            "port": [
+                        ( # EPC 1200 or EPC 4x Desktop 1200
+                            ".1.3.6.1.4.1.28507.11.1.2.2.1",
+                            epc_1200_info_leafs['port']
+                        ),
+                        ( # EPC 1200, newer firmware
+                            ".1.3.6.1.4.1.28507.37.1.3.1.2.1",
+                            epc_1200_info_leafs['port']
+                        ),
+                    ],
+            "sensor": [
+                        ( # EPC 1200 or EPC 4x Desktop 1200
+#                            ".1.3.6.1.4.1.28507.11.1.3.2.1",
+                            ".1.3.6.1.4.1.28507.11.1.3",
+                            epc_1200_info_leafs['sensor_old']
+                        ),
+                        ( # EPC 1200, newer firmware
+#                            ".1.3.6.1.4.1.28507.37.1.6.1.1",
+                            ".1.3.6.1.4.1.28507.37.1",
+                            epc_1200_info_leafs['sensor_new']
+                        ),
+                      ],
+}
+
+epc_1200_portstate = {
+    '0': 'off',
+    '1': 'on',
+    '2': 'laststate',
+}
+

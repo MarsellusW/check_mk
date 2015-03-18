@@ -1,0 +1,4 @@
+#!/usr/bin/env python
+# -*- encoding: utf-8; py-indent-offset: 4 -*-
+
+ironport_snmp_scan = lambda oid: "IronPort" in oid(".1.3.6.1.2.1.1.1.0")
