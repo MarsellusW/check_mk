@@ -1,0 +1,18 @@
+#!/usr/bin/python
+# -*- encoding: utf-8; py-indent-offset: 4 -*-
+
+fireeye_truefalse = {
+                 "1": True,
+                 "2": False,
+               }
+
+fireeye_update = {
+              "1": "passed",
+              "2": "failed",
+            }
+
+fireeye_snmp_scan = lambda oid: "FireEye" in oid(".1.3.6.1.2.1.1.1.0")
+
+def inventory_fireeye_generic(info):
+    if info:
+        return [(None, None)]
