@@ -11,31 +11,32 @@ def inventory_a10_memory(info):
 
 def check_a10_memory(item, params, info):
     if info:
-        # SNMP data is in kBytes, so let's get Bytes out of it
-        total = int(info[0][0]) * 1024
-        used  = int(info[0][1]) * 1024
+        # SNMP data is in kBytes, so let's get MBytes out of it
+        total_mb = saveint(info[0][0]) / 1024.0
+        used_mb  = saveint(info[0][1]) / 1024.0
 
-        warn, crit = params['levels']
+        try:
+            warn, crit = params['levels']
+        except:
+            warn, crit = params
 
-        warn = total * warn / 100
-        crit = total * crit / 100
+        warn = total_mb * warn / 100
+        crit = total_mb * crit / 100
 
         state = 0
         label = ""
 
-        perfdata = [("used", used, warn, crit, total)]
+        perfdata = [("used", used_mb, warn, crit, 0, total_mb)]
 
-        if used >= crit:
+        if used_mb >= crit:
             state = 2
             label = "(!!)"
-        elif used >= warn:
+        elif used_mb >= warn:
             state = 1
             label = "(!)"
 
-        infotext = "%s%s of %s used" % (get_bytes_human_readable(used), label,
-                                        get_bytes_human_readable(total))
-        infotext += " (levels at %s/%s)" % (get_bytes_human_readable(warn),
-                                            get_bytes_human_readable(crit))
+        infotext = "%.1fMB%s of %.1fMB used" % (used_mb, label, total_mb)
+        infotext += " (levels at %.1f/%.1f)" % (warn, crit)
 
         return (state, infotext, perfdata)
 

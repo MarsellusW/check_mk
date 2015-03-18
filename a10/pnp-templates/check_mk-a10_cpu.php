@@ -29,19 +29,22 @@ $def[1] =  "DEF:utila=$RRDFILE[1]:$DS[1]:AVERAGE " ;
 $def[1] .=  "DEF:utilc=$RRDFILE[2]:$DS[2]:AVERAGE " ;
 $def[1] .=  "DEF:utild=$RRDFILE[3]:$DS[3]:AVERAGE " ;
 
-$def[1] .= "LINE:utilc#F51D30FF:\"Utilization Control CPU\" " ;
-$def[1] .= "GPRINT:utilc:MIN:\" Min\: %3.1lf%%\" " ;
-$def[1] .= "GPRINT:utilc:MAX:\"Max\: %3.1lf%%\" " ;
-$def[1] .= "GPRINT:utilc:LAST:\"Last\: %3.1lf%%\" " ;
+$def[1] .= "LINE:utilc#F51D30FF:\"Control CPU    \" " ;
+$def[1] .= "GPRINT:utilc:LAST:\"%6.1lf%% last\" " ;
+$def[1] .= "GPRINT:utilc:AVERAGE:\"%6.1lf%% avg\" " ;
+$def[1] .= "GPRINT:utilc:MIN:\"%6.1lf%% min\" " ;
+$def[1] .= "GPRINT:utilc:MAX:\"%6.1lf%% max\\n\" " ;
 
-$def[1] .= "LINE:utild#00A348FF:\"Utilization Data CPU\" " ;
-$def[1] .= "GPRINT:utild:MIN:\"   Min\: %3.1lf%%\" " ;
-$def[1] .= "GPRINT:utild:MAX:\"Max\: %3.1lf%%\" " ;
-$def[1] .= "GPRINT:utild:LAST:\"Last\: %3.1lf%%\" " ;
+$def[1] .= "LINE:utild#00A348FF:\"Data CPU       \" " ;
+$def[1] .= "GPRINT:utild:LAST:\"%6.1lf%% last\" " ;
+$def[1] .= "GPRINT:utild:AVERAGE:\"%6.1lf%% avg\" " ;
+$def[1] .= "GPRINT:utild:MIN:\"%6.1lf%% min\" " ;
+$def[1] .= "GPRINT:utild:MAX:\"%6.1lf%% max\\n\" " ;
 
-$def[1] .= "LINE:utila#002A97FF:\"Utilization Average CPU\" " ;
-$def[1] .= "GPRINT:utila:MIN:\"Min\: %3.1lf%%\" " ;
-$def[1] .= "GPRINT:utila:MAX:\"Max\: %3.1lf%%\" " ;
-$def[1] .= "GPRINT:utila:LAST:\"Last\: %3.1lf%%\" " ;
+$def[1] .= "LINE:utila#002A97FF:\"Average CPU    \" " ;
+$def[1] .= "GPRINT:utila:LAST:\"%6.1lf%% last\" " ;
+$def[1] .= "GPRINT:utila:AVERAGE:\"%6.1lf%% avg\" " ;
+$def[1] .= "GPRINT:utila:MIN:\"%6.1lf%% min\" " ;
+$def[1] .= "GPRINT:utila:MAX:\"%6.1lf%% max\\n\" " ;
 
 ?>
