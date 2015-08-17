@@ -205,11 +205,11 @@ def process_host(host, hosts):
     else:  # search for files too old
         all_files, old_files = search_files(host_path)
 
-    if old_files.get('xml', None):
-        all_files = process_xml_files(host, all_files, old_files)
+        if old_files.get('xml', None):
+            all_files = process_xml_files(host, all_files, old_files)
 
-    if old_files.get('rrd', None):
-        process_rrd_files(host, all_files, old_files)
+        if old_files.get('rrd', None):
+            process_rrd_files(host, all_files, old_files)
 
     return
 
