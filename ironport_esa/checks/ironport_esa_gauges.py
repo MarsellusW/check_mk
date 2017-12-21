@@ -51,7 +51,7 @@ ironport_esa_gauge_types = {
         'total_utilization',
         'cpu_utilization',
         'case_utilization',
-#        'bm_utilization',  # BrightMail, an older Anti-Spam engine
+        # 'bm_utilization',  # BrightMail, an older Anti-Spam engine
         'av_utilization',
         'reporting_utilization',
         'quarantine_utilization',
@@ -84,6 +84,11 @@ ironport_esa_gauge_types = {
     ],
 }
 
+ironport_esa_gauge_mapping = {  # diffs between fw-version 7.6.1 and 9.1.0
+    'msgs_in_policy_virus_outbreak_quarantine': 'msgs_in_quarantine',
+    'kbytes_in_policy_virus_outbreak_quarantine': 'kbytes_in_quarantine',
+}
+
 
 def inventory_ironport_esa_gauges(info, checktype):
     gauges = [l[0] for l in info]
@@ -110,6 +115,9 @@ def check_ironport_esa_gauges(params, info, checktype):
         if gauge == 'log_available':
             value, unit = (value[:3], value[-1:])
             value = int(value) * calc_unit[unit]
+
+        if gauge in ironport_esa_gauge_mapping:
+            gauge = ironport_esa_gauge_mapping[gauge]
 
         values[gauge] = saveint(value)  # pylint: disable=E0602
 

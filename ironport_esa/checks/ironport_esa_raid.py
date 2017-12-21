@@ -4,37 +4,54 @@
 """
 Check_MK service showing the RAID status of an IronPort Appliance.
 """
+iport_raid_stat = {
+    '1': 'Healthy(1)',
+    '2': 'Failure(2)',
+    '3': 'Rebuild(3)',
+}
+
+iport_map_raid_stat = {
+    '1': 0,
+    '2': 2,
+    '3': 1,
+}
 
 
-def inventory_iport_dnsunfinished(info):
+def inventory_iport_raid(info):
+    inventory = []
+
     if info:
-        return [(None, None)]
-    else:
-        return []
+        inventory = [(drive[0], None) for drive in info]
+
+    return inventory
 
 
-def check_iport_dnsunfinished(_no_item, _no_params, info):
-    if info:
-        outstanding, pending = info[0]
+def check_iport_raid(item, _no_params, info):
+    for drive in info:
+        name, drvstat, lasterror = drive
 
-        msg = "outstanding: %s, pending: %s" % (outstanding, pending)
+        if name != item:
+            continue
 
-        perfdata = [("outstanding", outstanding), ("pending", pending)]
+        msg = "Status: %s, Last error: %s" % (
+            iport_raid_stat[drvstat], lasterror)
 
-        return(0, msg, perfdata)
+        return(iport_map_raid_stat[drvstat], msg)
+
     return(3, "no data found")
 
 
 # pylint: disable=E0602
-check_info['ironport_esa_dnsunfinished'] = {
-    "check_function": check_iport_dnsunfinished,
-    "inventory_function": inventory_iport_dnsunfinished,
-    "has_perfdata": True,
-    "service_description": "IronPort unfinished DNS requests",
+check_info['ironport_esa_raid'] = {
+    "check_function": check_iport_raid,
+    "inventory_function": inventory_iport_raid,
+    "has_perfdata": False,
+    "service_description": "IronPort RAID %s",
     "snmp_scan_function": ironport_snmp_scan,
-    "snmp_info": (".1.3.6.1.4.1.15497.1.1.1", [
-        15,  # outstandingDNSRequests
-        16  # pendingDNSRequests
+    "snmp_info": (".1.3.6.1.4.1.15497.1.1.1.18.1", [
+        3,  # raidID
+        2,  # raidStatus
+        4  # raidLastError
     ]),
     "includes": ["ironport.include"],
 }

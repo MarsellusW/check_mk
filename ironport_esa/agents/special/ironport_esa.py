@@ -1,10 +1,10 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- encoding: utf-8; py-indent-offset: 4 -*-
 
 # IronPort ESA poller agent
 
 if __name__ == '__main__':
-    import urllib2
+    import requests
     import sys
     import getopt
     import time
@@ -40,41 +40,16 @@ if __name__ == '__main__':
         opt_parser.print_help()
         sys.exit(2)
 
-    #url_dns = "http://%s/xml/dnsstatus" % (host)
-    #url_stat = "http://%s/xml/dnsstatus" % (host)
-    #url = "http://%s/xml/dnsstatus" % (host)
-    #urls = "https://%s/xml/status" % (host)
-    handler = urllib2.HTTPBasicAuthHandler()
-    handler.add_password(opt.realm, host, opt.user, opt.passwd)
-    opener = urllib2.build_opener(handler)
-    urllib2.install_opener(opener)
-
     data = {}
     
     for xml in ["status", "dnsstatus"]:
         try:
-            client = urllib2.urlopen("https://%s/xml/%s" % (host, xml))
-        except urllib2.HTTPError:
-            print "HTTPS fehlgeschlagen!"
-            try:
-                client = urllib2.urlopen("http://%s/xml/%s" % (host, xml))
-            except urllib2.HTTPError:
-                print "Error: Problem opening url."
-                traceback.print_exc()
-                sys.exit(2)
-
-        data[xml] = ''.join(client.readlines())
-#     try:
-#         client_dns = urllib2.urlopen(urls)
-#     except urllib2.HTTPError:
-#         try:
-#             client = urllib2.urlopen(url)
-#         except urllib2.HTTPError:
-#             print "Error: Problem opening url."
-#             traceback.print_exc()
-#             sys.exit(2)
-# 
-#     data = ''.join(client.readlines())
+            client = requests.get("https://%s/xml/%s" % (host, xml), auth=(opt.user, opt.passwd), verify=False)
+        except Exception, e:
+            print "HTTPS fehlgeschlagen! %s" % e
+            traceback.print_exc()
+            sys.exit(2)
+        data[xml] = client.text
     dom = minidom.parseString(data['status'])
 
     version = '0.1'
@@ -99,12 +74,6 @@ if __name__ == '__main__':
     for gauge in gauges:
         sys.stdout.write("%s %s\n" % (re.sub(r"\s+", '_', gauge.attributes["name"].value),
                          gauge.attributes["current"].value))
-#         if gauge.attributes["name"].value == "conn_in":
-#             print "conn_in %s" % (gauge.attributes["current"].value)
-#         if gauge.attributes["name"].value == "conn_out":
-#             print "conn_out %s" % (gauge.attributes["current"].value)
-
-    # gather & print counter info.
 
     sys.stdout.write("<<<ironport_esa_counters>>>\n")
 
@@ -115,5 +84,4 @@ if __name__ == '__main__':
         for counter in counters:
             sys.stdout.write("%s %s\n" % (re.sub(r"\s+", '_', counter.attributes["name"].value),
                                           counter.attributes["lifetime"].value))
-
 
