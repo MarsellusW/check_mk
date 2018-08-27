@@ -1,14 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- encoding: utf-8; py-indent-offset: 4 -*-
-
-import pprint
-
-state_label = {
-    0: '',
-    1: '(!)',
-    2: '(!!)',
-    3: '(!!!)',
-}
 
 ironport_esa_counter_names = {
     'hard_bounced_recips': 'Total',
@@ -93,7 +84,7 @@ def check_ironport_esa_counters(info, checktype):
     for cntr, value in info:
         if cntr in cntrs:
             try:
-                _timedif, rate = get_counter(
+                rate = get_rate(
                     "counters.%s.%s" %
                     (checktype, cntr), this_time, saveint(value))
                 values[cntr] = rate
