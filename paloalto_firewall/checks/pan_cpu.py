@@ -37,7 +37,7 @@ def check_paloalto_cpu(item, params, info):
 
     return (3, "No data retceived for %s" % item)
 
-check_info['pan-cpu'] = {
+check_info['pan_cpu'] = {
     "check_function"      : check_paloalto_cpu,
     "inventory_function"  : inventory_paloalto_cpu,
     "has_perfdata"        : True,
