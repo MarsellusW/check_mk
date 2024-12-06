@@ -11,7 +11,7 @@ Script in intended to be run as cronjob or manually from commandline, both in an
 OMD environment. If you do not use OMD the script will explain what changes are
 needed.
 
-Attention: set "CMS_IS_IN_USE = False" below if Check_MK Micro Core is not used!
+Attention: set "CMC_IS_IN_USE = False" below if Check_MK Micro Core is not used!
 
 It defines classes_and_methods
 
@@ -36,16 +36,16 @@ import time
 import livestatus  # pylint: disable=E0401
 
 __all__ = []
-__version__ = 0.8
+__version__ = 0.9
 __date__ = '2015-08-12'
-__updated__ = '2015-08-17'
+__updated__ = '2024-12-06'
 
 # Modification time of files must be older that this number of days
 # (defaults to 90)
 XDAYS = 90
 
 # Set this to False if Check_MK Micro Core is not in use, True otherwise
-CMS_IS_IN_USE = True
+CMC_IS_IN_USE = True
 
 try:
     omd_root = os.getenv("OMD_ROOT")
@@ -107,7 +107,7 @@ def search_files(host_path):
             filename = os.path.join(root, name)
             file_ext = os.path.splitext(filename)[1][1:].lower()
 
-            if CMS_IS_IN_USE:  # path starts with /opt/omd instead of /omd
+            if CMC_IS_IN_USE:  # path starts with /opt/omd instead of /omd
                 filename = f"/opt{filename}"
 
             all_files.setdefault(file_ext, {})[filename] = True
